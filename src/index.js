@@ -82,11 +82,11 @@ async function getSesameStatus(uuid, apiKey) {
 
 		for (const [key, device] of Object.entries(devices)) {
 		  const status = await getSesameStatus(device.uuid, env.SESAME_API_KEY);
-		  const deviceMessage = `${device.name}の状態:\n施錠: ${status.locked ? 'はい' : 'いいえ'}\nバッテリー: ${status.batteryPercentage}%`;
+		  const deviceMessage = `${device.name}の状態:\n施錠: ${status.CHSesame2Status === 'locked' ? '🔒 locked' : '🔓 unlocked'}\nバッテリー: ${status.batteryPercentage}%`;
 		  statusMessages.push(deviceMessage);
 		}
 
-		const finalMessage = "Sesame状態レポート\n\n" + statusMessages.join("\n\n");
+		const finalMessage = "Sesameのステータス\n\n" + statusMessages.join("\n\n");
 		await sendLineMessage(finalMessage, env.LINE_ACCESS_TOKEN, env.LINE_USER_ID);
 
 		return new Response(JSON.stringify({
@@ -103,7 +103,7 @@ async function getSesameStatus(uuid, apiKey) {
 	  }
 	},
 
-	// 定期実行される処理（変更なし）
+	// 定期実行される処理
 	async scheduled(event, env, ctx) {
 	  try {
 		const devices = JSON.parse(env.SESAME_DEVICES);
@@ -111,7 +111,7 @@ async function getSesameStatus(uuid, apiKey) {
 
 		for (const [key, device] of Object.entries(devices)) {
 		  const status = await getSesameStatus(device.uuid, env.SESAME_API_KEY);
-		  const deviceMessage = `${device.name}の状態:\n施錠: ${status.locked ? 'はい' : 'いいえ'}\nバッテリー: ${status.batteryPercentage}%`;
+		  const deviceMessage = `${device.name}の状態:\n施錠: ${status.CHSesame2Status === 'locked' ? '🔒 locked' : '🔓 unlocked'}\nバッテリー: ${status.batteryPercentage}%`;
 		  statusMessages.push(deviceMessage);
 		}
 
