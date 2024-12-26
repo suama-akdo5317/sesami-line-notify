@@ -45,11 +45,6 @@ async function getSesameStatus(uuid, apiKey) {
 
   export default {
 	async fetch(request, env, ctx) {
-	  // faviconリクエストは即座に404
-	  if (request.url.endsWith('/favicon.ico')) {
-		return new Response(null, { status: 404 });
-	  }
-
 	  // メソッドチェック（POST）
 	  if (request.method !== 'POST') {
 		return new Response(JSON.stringify({ error: 'Method Not Allowed' }), {
@@ -58,7 +53,7 @@ async function getSesameStatus(uuid, apiKey) {
 		});
 	  }
 
-	  // 認証ヘッダーチェック（必須）
+	  // 認証ヘッダーチェック
 	  if (!request.headers.has('X-API-KEY')) {
 		return new Response(JSON.stringify({ error: 'API Key Required' }), {
 		  status: 401,
